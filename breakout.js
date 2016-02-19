@@ -1,11 +1,4 @@
-0/**
- * adding some logic and understand its function for
- * begginer like me its always good to start making it and understand what your doing
- * rather than goofing around.
- */
-
-
-var canvas = document.getElementById("myCanvas");
+var canvas = document.getElementById("404Canvas");
 var ctx = canvas.getContext("2d");
 
 var ballRadius = 10;
@@ -29,10 +22,13 @@ var brickWidth = 30;
 var brickHeight = 15;
 var brickPadding = 5;
 
-var brickOffsetTop = 30;
+var brickOffsetTop = 70;
 var brickOffsetLeft = 30;
+
+var prevScore = 1;
 var score = 0;
-var lives = 10; //adding lives 5 and max lives will be 10
+
+var lives = 5; //adding lives 5 and max lives will be 10
 
 var bricks = [];
 
@@ -54,9 +50,8 @@ for(c=0; c<brickColumnCount; c++) {
     bricks[c] = [];
     for(r=0; r<brickRowCount; r++) {
         console.log(gameMap[c][r]);
-        if(gameMap[c][r] ==  1){
+        if(gameMap[c][r] ==  1)
             bricks[c][r] = { x: 0, y: 0, status: 1, color: "grey" };
-        }
         else
             bricks[c][r] = { x: 0, y: 0, status: 0, color: "grey" };
     }
@@ -65,8 +60,6 @@ for(c=0; c<brickColumnCount; c++) {
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("mousemove", mouseMoveHandler, false);
-
-
 
 function keyDownHandler(e) {
     if(e.keyCode == 39) {
@@ -98,25 +91,11 @@ function collisionDetection() {
                 if( (x+ballRadius) > b.x && (x-ballRadius) < (b.x + brickWidth)
                     &&
                     y > b.y && y < (b.y + brickHeight) ) {
-                    //dx = -dx;
-                    //b.status = 0;
-                    //score++;
-                    //if(score == brickRowCount*brickColumnCount) {
-                    //    alert("YOU WIN, CONGRATS!");
-                    //    document.location.reload();
-                    //}
                     changeWay(true, b);
                     return;
                 }else if( x > b.x && x < (b.x + brickWidth)
                     &&
                     (y+ballRadius) > b.y && (y-ballRadius) < (b.y + brickHeight) ) {
-                    //dy = -dy;
-                    //b.status = 0;
-                    //score++;
-                    //if(score == brickRowCount*brickColumnCount) {
-                    //    alert("YOU WIN, CONGRATS!");
-                    //    document.location.reload();
-                    //}
                     changeWay(false, b);
                     return;
                 }
@@ -132,11 +111,18 @@ function changeWay(isX, b)
     else
         dy = -dy;
     b.status = 0;
-    score++;
+    addScore();
     if(score == brickRowCount*brickColumnCount) {
         alert("YOU WIN, CONGRATS!");
         document.location.reload();
     }
+}
+
+function addScore()
+{
+    var tempScore = score;
+    score += prevScore;
+    prevScore = tempScore;
 }
 
 function drawBall() {
@@ -146,6 +132,7 @@ function drawBall() {
     ctx.fill();
     ctx.closePath();
 }
+
 function drawPaddle() {
     ctx.beginPath();
     ctx.rect(paddleX, canvas.height-paddleHeight-10, paddleWidth, paddleHeight);
@@ -153,6 +140,7 @@ function drawPaddle() {
     ctx.fill();
     ctx.closePath();
 }
+
 function drawBricks() {
     for(c=0; c<brickColumnCount; c++) {
         for(r=0; r<brickRowCount; r++) {
@@ -170,17 +158,30 @@ function drawBricks() {
         }
     }
 }
-// testing for the sounds effects
 function drawScore() {
-    ctx.font = "16px Arial";
+    ctx.font = "bold 16px Arial";
+    ctx.fillStyle = "grey";
+    ctx.fillText("SCORE: ", canvas.width-100, 20);
     ctx.fillStyle = "orange";
-    ctx.fillText("Score: "+score, 8, 20);
+    ctx.fillText(score, canvas.width-35, 20);
 }
 function drawLives() {
-    ctx.font = "16px Arial";
-    ctx.fillStyle = "orange";
-    ctx.fillText("Lives: "+lives, canvas.width-65, 20);
+    ctx.font = "bold 16px Arial";
+    ctx.fillStyle = "grey";
+    ctx.fillText("LIVES:", 9, 20);
+    for(i = 0;i<lives;++i)
+        drawLife(i);
 }
+
+function drawLife(i)
+{
+    ctx.beginPath();
+    ctx.rect( (70+i*40), 7, brickWidth, brickHeight);
+    ctx.fillStyle = "orange";
+    ctx.fill();
+    ctx.closePath();
+}
+
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -197,7 +198,7 @@ function draw() {
     if(y + dy < ballRadius) {
         dy = -dy;
     }
-    else if(y + dy > canvas.height-ballRadius-10) {
+    else if(y + dy > (canvas.height-ballRadius-10) ) {
         if(x > paddleX && x < paddleX + paddleWidth) {
             dy = -dy;
         }
@@ -228,5 +229,4 @@ function draw() {
     y += dy;
     requestAnimationFrame(draw);
 }
-
 draw();
