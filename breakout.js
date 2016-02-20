@@ -192,8 +192,8 @@ function drawPaddle() {
 }
 
 function drawBricks() {
-    for(c=0; c<brickColumnCount; c++) {
-        for(r=0; r<brickRowCount; r++) {
+    for(var c = 0; c < brickColumnCount; c++) {
+        for(var r = 0; r < brickRowCount; r++) {
             if(bricks[c][r].status == 1) {
                 var brickX = (r*(brickWidth+brickPadding))+brickOffsetLeft;
                 var brickY = (c*(brickHeight+brickPadding))+brickOffsetTop;
@@ -219,7 +219,7 @@ function drawLives() {
     ctx.font = "bold 16px Arial";
     ctx.fillStyle = "grey";
     ctx.fillText("LIVES:", 9, 20);
-    for(i = 0;i < lives;++i)
+    for(var i = 0;i < lives;++i)
         drawLife(i);
 }
 
