@@ -41,7 +41,7 @@ var lives = 3; //adding lives 5 and max lives will be 10
 
 var bricks = [];
 var triged = false;
-
+var briksLeft;
 var colors = [
  "#FF0000","#FF4000","#FF8000","#FFC100","#FCFF00","#BBFF00","#7BFF00","#3AFF00","#00FF05","#00FF45","#00FF86","#00FFC6","#00F6FF","#00B6FF","#0075FF","#0035FF","#0A00FF","#4B00FF","#8B00FF","#CC00FF","#FF00F1","#FF00B0","#FF0070"
 ]
@@ -162,18 +162,11 @@ function changeWay(isX, b)
     else
         dy = -dy;
     b.status = 0;
-    addScore();
-    if(score == brickRowCount*brickColumnCount) {
+    score += b.triged ? 100 : 5;
+    if(briksLeft == 0)
         alert("YOU WIN, CONGRATS!");
         document.location.reload();
     }
-}
-
-function addScore()
-{
-    var tempScore = score;
-    score += prevScore;
-    prevScore = tempScore;
 }
 
 function drawBall() {
@@ -203,6 +196,7 @@ function drawPaddle() {
 }
 
 function drawBricks() {
+  briksLeft = 0;
     for(var c = 0; c < brickColumnCount; c++) {
         for(var r = 0; r < brickRowCount; r++) {
             if(bricks[c][r].status == 1) {
@@ -215,12 +209,13 @@ function drawBricks() {
                 ctx.fillStyle = getColor();
                 ctx.fill();
                 ctx.closePath();
+                briksLeft++;
             }
         }
     }
 }
 
-var framesCount = 500;
+var framesCount = 600;
 var frames = framesCount;
 function getColor(){
   if(triged || frames < framesCount){
@@ -236,11 +231,11 @@ function getColor(){
 }
 
 function drawScore() {
-    ctx.font = "bold 16px Arial";
+    ctx.font = "bold 24px Arial";
     ctx.fillStyle = helpfulColor;
-    ctx.fillText("SCORE: ", canvas.width - 100, 20);
+    //ctx.fillText(/*"SCORE: ",*/ canvas.width - canvas.width/2-25;, 20);
     ctx.fillStyle = mainColor;
-    ctx.fillText(score, canvas.width - 35, 20);
+    ctx.fillText(score, canvas.width/2, 20);
 }
 function drawLives() {
     ctx.font = "bold 16px Arial";
