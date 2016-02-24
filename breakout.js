@@ -5,6 +5,9 @@ var ballRadius = 10;
 var x = canvas.width/2;
 var y = canvas.height-30;
 
+var mainColor = "#CC424A";
+var helpfulColor = "#1F1F1F";
+
 var xSpeed = 3;
 var ySpeed = -3;
 var speedLimit = 6;
@@ -111,13 +114,13 @@ function mouseMoveHandler(e) {
         if(dy == 0)
             x = paddleX + paddleWidth / 2;
     }
-    
+
     if (relativeX < 0) {
         paddleX = 0;
     } else if (relativeX > canvas.width) {
         paddleX = canvas.width - paddleWidth;
     }
-    
+
 }
 
 function mouseDownHandler(e) {
@@ -178,7 +181,7 @@ function drawBall() {
         ctx.arc(paddleX + paddleWidth / 2, y, ballRadius, 0, Math.PI * 2);
     }else
         ctx.arc(x, y, ballRadius, 0, Math.PI*2);
-    ctx.fillStyle = "orange";
+    ctx.fillStyle = mainColor;
     ctx.fill();
     ctx.closePath();
 }
@@ -207,7 +210,7 @@ function drawBricks() {
                 bricks[c][r].y = brickY;
                 ctx.beginPath();
                 ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                ctx.fillStyle = triged ? "red" : "grey";
+                ctx.fillStyle = triged ? mainColor : helpfulColor;
                 ctx.fill();
                 ctx.closePath();
             }
@@ -216,14 +219,14 @@ function drawBricks() {
 }
 function drawScore() {
     ctx.font = "bold 16px Arial";
-    ctx.fillStyle = "grey";
+    ctx.fillStyle = helpfulColor;
     ctx.fillText("SCORE: ", canvas.width - 100, 20);
-    ctx.fillStyle = "orange";
+    ctx.fillStyle = mainColor;
     ctx.fillText(score, canvas.width - 35, 20);
 }
 function drawLives() {
     ctx.font = "bold 16px Arial";
-    ctx.fillStyle = "grey";
+    ctx.fillStyle = helpfulColor;
     ctx.fillText("LIVES:", 9, 20);
     for(var i = 0;i < lives;++i)
         drawLife(i);
@@ -233,7 +236,7 @@ function drawLife(i)
 {
     ctx.beginPath();
     ctx.rect( (70 + i * 40), 7, brickWidth, brickHeight);
-    ctx.fillStyle = "orange";
+    ctx.fillStyle = mainColor;
     ctx.fill();
     ctx.closePath();
 }
@@ -286,17 +289,17 @@ function draw() {
 }
 
 function speedUp() {
-    
+
     if (dx == 0 || dy == 0) {
         setTimeout(speedUp, speedUpTimeout);
         return;
     }
-    
+
     if (Math.abs(dx) > speedLimit || Math.abs(dy) > speedLimit) {
         setTimeout(speedUp, speedUpTimeout);
         return;
     }
-    
+
     dx = dx * acceleraton;
     dy = dy * acceleraton;
 
