@@ -37,6 +37,7 @@ var score = 0;
 var lives = 3; //adding lives 5 and max lives will be 10
 
 var bricks = [];
+var triged = false;
 
 var colors = [
  "#FF0000","#FF4000","#FF8000","#FFC100","#FCFF00","#BBFF00","#7BFF00","#3AFF00","#00FF05","#00FF45","#00FF86","#00FFC6","#00F6FF","#00B6FF","#0075FF","#0035FF","#0A00FF","#4B00FF","#8B00FF","#CC00FF","#FF00F1","#FF00B0","#FF0070"
@@ -67,10 +68,13 @@ function getRandomColor() {
 
 for(var c=0; c<brickColumnCount; c++) {
     bricks[c] = [];
-    for(var r = 0; r < brickRowCount; r++) {
-
-        if(gameMap[c][r] ==  1)
-            bricks[c][r] = { x: 0, y: 0, status: 1, color: "grey" };
+    for(r=0; r<brickRowCount; r++) {
+        if(gameMap[c][r] ==  1) {
+            if (Math.floor(Math.random() * 32) < Math.floor(Math.random() * 32)) {
+                bricks[c][r] = {x: 0, y: 0, status: 1, color: "grey", triged: true};
+            } else
+                bricks[c][r] = {x: 0, y: 0, status: 1, color: "grey", triged: false};
+        }
         else
             bricks[c][r] = { x: 0, y: 0, status: 0, color: "grey" };
     }
@@ -131,11 +135,13 @@ function collisionDetection() {
                 if( (x+ballRadius) > b.x && (x-ballRadius) < (b.x + brickWidth)
                     &&
                     y > b.y && y < (b.y + brickHeight) ) {
+                    triged = b.triged;
                     changeWay(true, b);
                     return;
                 }else if( x > b.x && x < (b.x + brickWidth)
                     &&
                     (y+ballRadius) > b.y && (y-ballRadius) < (b.y + brickHeight) ) {
+                    triged = b.triged;
                     changeWay(false, b);
                     return;
                 }
@@ -201,7 +207,7 @@ function drawBricks() {
                 bricks[c][r].y = brickY;
                 ctx.beginPath();
                 ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                ctx.fillStyle = getRandomColor();
+                ctx.fillStyle = triged ? "red" : "grey";
                 ctx.fill();
                 ctx.closePath();
             }
