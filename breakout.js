@@ -73,7 +73,7 @@ for(var c=0; c<brickColumnCount; c++) {
     bricks[c] = [];
     for(r=0; r<brickRowCount; r++) {
         if(gameMap[c][r] ==  1) {
-            if (Math.floor(Math.random() * 32) < Math.floor(Math.random() * 32)) {
+            if (Math.floor(Math.random() * 32) < Math.floor(Math.random() * 5)) {
                 bricks[c][r] = {x: 0, y: 0, status: 1, color: "grey", triged: true};
             } else
                 bricks[c][r] = {x: 0, y: 0, status: 1, color: "grey", triged: false};
@@ -138,13 +138,15 @@ function collisionDetection() {
                 if( (x+ballRadius) > b.x && (x-ballRadius) < (b.x + brickWidth)
                     &&
                     y > b.y && y < (b.y + brickHeight) ) {
-                    triged = b.triged;
+                      if(!triged)
+                        triged = b.triged;
                     changeWay(true, b);
                     return;
                 }else if( x > b.x && x < (b.x + brickWidth)
                     &&
                     (y+ballRadius) > b.y && (y-ballRadius) < (b.y + brickHeight) ) {
-                    triged = b.triged;
+                      if(!triged)
+                        triged = b.triged;
                     changeWay(false, b);
                     return;
                 }
@@ -210,13 +212,29 @@ function drawBricks() {
                 bricks[c][r].y = brickY;
                 ctx.beginPath();
                 ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                ctx.fillStyle = triged ? mainColor : helpfulColor;
+                ctx.fillStyle = getColor();
                 ctx.fill();
                 ctx.closePath();
             }
         }
     }
 }
+
+var framesCount = 500;
+var frames = framesCount;
+function getColor(){
+  if(triged || frames < framesCount){
+    --frames;
+    if(frames == 0){
+      frames = framesCount;
+      triged = false;
+    }
+    return getRandomColor();
+  }else {
+    return helpfulColor;
+  }
+}
+
 function drawScore() {
     ctx.font = "bold 16px Arial";
     ctx.fillStyle = helpfulColor;
