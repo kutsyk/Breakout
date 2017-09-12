@@ -164,6 +164,7 @@ function changeWay(isX, b)
     b.status = 0;
     score += b.triged ? 100 : 5;
     if(briksLeft == 0)
+    {
         alert("YOU WIN, CONGRATS!");
         document.location.reload();
     }
